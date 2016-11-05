@@ -5,6 +5,7 @@
 
 [python style guide](https://www.python.org/dev/peps/pep-0008/)
 
+[dependent class properties (and decorators) in python](http://www.programiz.com/python-programming/property)
 
 ## Package and Module Names
 
