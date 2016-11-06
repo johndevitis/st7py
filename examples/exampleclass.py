@@ -20,7 +20,7 @@ class John(object):
 
     def bendover(self):
         atts = vars(self)
-        print('\n'.join('%s: %s' % item for item in vars(atts).items()))
+        print('\n'.join('%s: %s' % item for item in atts).items()))
 
 def bar(base):
     if base.cnt % 2 == 0:
