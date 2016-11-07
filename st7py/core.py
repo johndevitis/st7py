@@ -5,7 +5,7 @@ core api functionality
 created by John DeVitis, 11/05/2016
 """
 from st7py import St7API
-
+import ctypes
 
 def start():
     """initialize API"""

@@ -1,13 +1,18 @@
 from st7py import core
 from st7py.model import Model
-core.start()
 
-model = Model(path = r'C:\Users\John\repos\st7py\examples\models',
-              name = r'beam1.st7',
-              scratch = r'C:\Temp')
+try:
+    core.start()
+    model = Model(path = r'C:\Users\John\repos\st7py\examples\models',
+                  name = r'beam1.st7',
+                  scratch = r'C:\Temp')
+    model.open()
+    tots = model.totals()
 
-model.open()
+    model.getNodeCoords()
+    #model.runNFA(2)
 
 
-model.close()
-core.stop()
+finally:
+    model.close()
+    core.stop()

@@ -1,6 +1,16 @@
 # st7py
 
 
+# Options
+
+## NFA
+
+nmodes=5
+
+
+
+
+
 # references
 
 [python style guide](https://www.python.org/dev/peps/pep-0008/)
