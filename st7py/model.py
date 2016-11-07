@@ -98,16 +98,25 @@ class Model(object):
                 print('\t\t{}: {}'.format(k, entityTotals[k]))
         return entityTotals
 
-    def getNodeCoords(self):
-        """get nodes=[1,2,3, ... ] -> default: ind='all'"""
+
+    def getNodes(self, disp=True):
+        """get all nodal coordinates in model"""
+
         # get numeric type of x, y, z coordinates
-        xyz = (ctypes.c_double*3)()
-        # get total nodes
-        tots = self.totals()
+        tots = self.totals(disp=False)
         nodes = tots['Nodes']
+
+        # initialize list (to append to) and st7 double input
+        coords = []
+        coord = (ctypes.c_double*3)()
+
+        # loop with 1 index (instead of  typical 0)
         for node in range(1, nodes+1):
-            chkErr(St7GetNodeXYZ(self.uID, node, xyz))
-            print('Node: {id} {x}, {y}, {z}'.format(id=node,x=xyz[0], y=xyz[1], z=xyz[2]))
+            chkErr(St7GetNodeXYZ(self.uID, node, coord))
+            coords.append(coord)
+            if disp:  # print output if desired
+                print('Node: {id} {x}, {y}, {z}'.format(id=node, x=coord[0],  y=coord[1], z=coord[2]))
+        return coords
 
 
     def showWindow(self):
