@@ -156,15 +156,31 @@ class Model(object):
 
 
 
-    def runNFA(self, nmodes=5):
+    def runNFA(self, modes=5):
         # set up result file name
         resName = os.path.splitext(self._fullname)[0] + '.nfa'.encode()
         # set number of modes to calculate
-        chkErr(St7SetNFANumModes(self.uID, nmodes))
+        chkErr(St7SetNFANumModes(self.uID, modes))
         # run solver
         chkErr(St7RunSolver(self.uID, stNaturalFrequencySolver, smBackgroundRun, btTrue))
 
-    def getFrequency(self, nmodes=5):
+    def getModeShapes(self, mode=1):
+        # open result file
+        resName = os.path.splitext(self._fullname)[0] + '.nfa'.encode()
+        nPrim, nSec = ctypes.c_int(), ctypes.c_int()
+        chkErr(St7OpenResultFile(self.uID,resName,''.encode(),False,nPrim,nSec))
+        nd = (ctypes.c_double*6)()
+        tots = self.totals(disp=False)
+        nodes = tots['Nodes']
+        u = []
+        for node in range(1,nodes+1):
+            chkErr(St7GetNodeResult(self.uID,rtNodeDisp,node,mode,nd))
+            u.append(nd[:])
+        # close result file
+        chkErr(St7CloseResultFile(self.uID))
+        return u
+
+    def getFrequency(self, modes=5):
 
         # open result file
         resName = os.path.splitext(self._fullname)[0] + '.nfa'.encode()
@@ -174,7 +190,7 @@ class Model(object):
         # get natural frequencies
         frq = (ctypes.c_double)()
         freq = []
-        for mode in range(1,nmodes+1):
+        for mode in range(1,modes+1):
             chkErr(St7GetFrequency(self.uID, mode,frq))
             freq.append(frq.value)
             print('Frequencies: {}'.format(frq))
