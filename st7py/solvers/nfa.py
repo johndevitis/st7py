@@ -5,11 +5,14 @@ solvers/nfa
 jdv 11062016
 """
 
-settings = {"enableNSMcase": True,
-            "modeParticipation": True,
+settings = {"enableNSMcase": False,
+            "modeParticipation": False,
             }
 
-def run():
+class NFA(object):
+    pass
+
+def solve():
     """perform a natural frequency analysis"""
     print('Natural Frequency Analysis:')
 
@@ -17,9 +20,6 @@ def run():
     print('\tCurrent settings:')
     for k, v in settings.items():
         print('\t\t{:20}\t{}'.format(k, v))
-
-def updateSettings(**kwargs):
-    print('Updating Settings...')
 
 def runNFA(self, nmodes=5):
     # set up result file name
@@ -30,6 +30,11 @@ def runNFA(self, nmodes=5):
     chkErr(St7RunSolver(self.uID, stNaturalFrequencySolver, smBackgroundRun, btTrue))
 
 
+def updateSettings(**kwargs):
+    print('Updating Settings...')
+    print('.. under development..')
+
+
 if __name__ == '__main__':
     """run defaults if called directly"""
-    run()
+    solve()

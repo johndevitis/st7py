@@ -9,8 +9,8 @@ def getAllNodes():
         # initialize api
         core.start()
         # create model object using path, name, and scratch keyword arguments
-        model = Model(path = r'C:\Users\John\repos\st7py\examples\models',
-                      name = r'beam1.st7',
+        model = Model(path = r'C:\Users\John\repos\brp\0705151\Models\Apriori',
+                      name = r'LiftSpan_apriori.st7',
                       scratch = r'C:\Temp')
         # open model
         model.open()
@@ -24,9 +24,9 @@ def getAllNodes():
         coords = model.getNodes(disp=False)
 
         # natural frequency analysis
-        model.runNFA(nmodes=5)
+        model.runNFA(nmodes=3)
 
-        freq = model.getFrequency(nmodes=5)
+        freq = model.getFrequency(nmodes=3)
 
         return tots, coords, freq
 

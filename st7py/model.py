@@ -90,12 +90,11 @@ class Model(object):
         """get total bricks, nodes, beams, and plates. returns dictionary"""
         nEnt = ctypes.c_int()
         entityTotals = {}
-        print('\tEntity totals:')
+        if disp: print('\tEntity totals:')
         for k, v in entityTypes.items():
             chkErr(St7GetTotal(self.uID, v, nEnt))
             entityTotals[k] = nEnt.value
-            if disp:
-                print('\t\t{}: {}'.format(k, entityTotals[k]))
+            if disp: print('\t\t{}: {}'.format(k, entityTotals[k]))
         return entityTotals
 
 
@@ -111,9 +110,10 @@ class Model(object):
         coord = (ctypes.c_double*3)()
 
         # loop with 1 index (instead of  typical 0)
+        # also note - need to slice the coord array to produce a copy
         for node in range(1, nodes+1):
             chkErr(St7GetNodeXYZ(self.uID, node, coord))
-            coords.append(coord)
+            coords.append(coord[:])
             if disp:  # print output if desired
                 print('Node: {id} {x}, {y}, {z}'.format(id=node, x=coord[0],  y=coord[1], z=coord[2]))
         return coords
@@ -152,3 +152,34 @@ class Model(object):
 
     def _closeResultFile(self):
         chkErr(St7CloseResultFile(self.uID))
+
+
+
+
+    def runNFA(self, nmodes=5):
+        # set up result file name
+        resName = os.path.splitext(self._fullname)[0] + '.nfa'.encode()
+        # set number of modes to calculate
+        chkErr(St7SetNFANumModes(self.uID, nmodes))
+        # run solver
+        chkErr(St7RunSolver(self.uID, stNaturalFrequencySolver, smBackgroundRun, btTrue))
+
+    def getFrequency(self, nmodes=5):
+
+        # open result file
+        resName = os.path.splitext(self._fullname)[0] + '.nfa'.encode()
+        nPrim, nSec = ctypes.c_int(), ctypes.c_int()
+        chkErr(St7OpenResultFile(self.uID,resName,''.encode(),False,nPrim,nSec))
+
+        # get natural frequencies
+        frq = (ctypes.c_double)()
+        freq = []
+        for mode in range(1,nmodes+1):
+            chkErr(St7GetFrequency(self.uID, mode,frq))
+            freq.append(frq.value)
+            print('Frequencies: {}'.format(frq))
+
+        # close result file
+        chkErr(St7CloseResultFile(self.uID))
+
+        return freq
