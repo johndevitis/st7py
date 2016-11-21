@@ -130,6 +130,9 @@ class Model(object):
     def destroyWindow(self):
         chkErr(St7DestroyModelWindow(self.uID))
 
+    def printImage(self,name='C:\Temp\image00.jpg',width=1920,height=1080):
+        chkErr(St7ExportImageFile(self.uID, name.encode(),itJPEG,width,height))
+
 
     def _setResultFileName(self):
         """ strips the extension off of the base model name and sets the result file w/o extension (from Strand7 PlateDemo.py exmaple)"""
