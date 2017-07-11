@@ -13,14 +13,14 @@ class John(object):
         John.cnt += 1
 
         # assign unique global count to instance
-        self.cnt = john.cnt
+        self.cnt = John.cnt
 
     def identify(self):
         print(self.__name__)
 
     def bendover(self):
         atts = vars(self)
-        print('\n'.join('%s: %s' % item for item in atts).items()))
+        print('\n'.join('%s: %s' % item for item in atts).items())
 
 def bar(base):
     if base.cnt % 2 == 0:

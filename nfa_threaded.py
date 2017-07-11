@@ -3,18 +3,22 @@ from st7py.model import Model
 #from st7py.solvers import nfa
 import csv
 from collections import defaultdict
+from multiprocessing import Pool, TimeoutError
+from itertools import repeat
+import time
+import timeit
 
-
-def getAllNodes():
+def execute(path,name,scratch):
     try:
-        # initialize api
-        core.start()
-        # create model object using path, name, and scratch keyword arguments
-        model = Model(path = r'C:\Users\John\repos\brp\0705151\Models\Apriori',
-                      name = r'LiftSpan_apriori.st7',
-                      scratch = r'C:\Temp')
+
+        # create model object
+        model = Model(path,name,scratch)
+
+        print(model.uID)
+
         # open model
         model.open()
+        print('opened model')
 
         # get dictionary of totals for all elements
         #  set disp=True to print totals
@@ -25,20 +29,25 @@ def getAllNodes():
         coords = model.getNodes(disp=False)
 
         # natural frequency analysis
-        modes = 14
-        model.runNFA(modes=modes)
-        freq = model.getFrequency(modes=modes)
+        model.runNFA(modes=10)
+        freq = model.getFrequency(modes=10)
+        for freqs in freq:
+            print(freqs)
 
+        """
         # get mode shapes
         U = defaultdict(list)
         for mode in range(1,modes+1):
             print('Getting shapes for mode: {}'.format(mode))
             U[mode] = model.getModeShapes(mode=mode)
 
-        return tots, coords, freq, U
+        return freq
+        """
+
     finally:
         model.close()
-        core.stop()
+        #core.stop()
+        print('closed model')
 
 def writeResults(coords,freq,U):
     # write shapes to file
@@ -57,3 +66,31 @@ def writeResults(coords,freq,U):
         writer = csv.writer(f)
         for row in freq:
             writer.writerow([row])
+
+def testnames(path,name,scratch):
+    time.sleep(1)
+    print(path)
+    print(name)
+    print(scratch)
+
+def main():
+    path = r'C:\Users\John\repos\brp\0705151\Models\Apriori'
+    name = r'LiftSpan_apriori.st7'
+    scratch = r'C:\Temp'
+
+    steps = 100
+
+    # start 5 worker process
+    with Pool(processes=steps) as pool:
+        # run each model
+        pool.starmap(testnames,zip(repeat(path,steps),
+                                   repeat(name,steps),
+                                   repeat(scratch,steps)))
+if __name__ == '__main__':
+    # initialize api
+    #core.start()
+    main()
+    #timeit.timeit('main()',number=1)
+
+    # release api
+    #core.stop()
