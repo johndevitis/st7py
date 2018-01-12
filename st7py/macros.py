@@ -27,6 +27,23 @@ def set_beam_material(uid, propnum, value, propname='modulus'):
     chkErr(St7SetBeamMaterialData(uid,propnum,data))
 
 
+def set_plate_thickness(uid, propnum, value, disp=False):
+    """
+    sets plate thickness. if single value given, function assumes membbrane and
+    bending thicknesses are the same and broadcasts the value given.
+    that is:
+        value = 8 -> assigns membrane and bending thickness to 8
+        value = [8,4] -> assigns membrane thickness to 8 and bending to 4
+    """
+    if not isinstance(value,list): value=[value,value]
+    data = (ctypes.c_double*2)()
+    chkErr(St7GetPlateThickness(uid, propnum, data))
+    if disp: print('({}) old thickness: {}'.format(uid,data[:]))
+    data[:] = value
+    chkErr(St7SetPlateThickness(uid, propnum, data))
+    if disp: print('({}) new thickness: {}'.format(uid,data[:]))
+
+
 def set_plate_material_iso(uid, propnum, value, propname='modulus'):
     """sets desired material data to isotropic plate. defaults to modulus"""
     data = (ctypes.c_double*8)()
