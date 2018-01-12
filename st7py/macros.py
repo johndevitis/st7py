@@ -6,10 +6,17 @@ from st7py.core import *
 
 
 def get_coord(uid, node):
-    """gets XYZ coordinate at node id"""
+    """gets XYZ coordinates at node id"""
     coord = (ctypes.c_double*3)()
     chkErr(St7GetNodeXYZ(uid, node, coord))
     return coord[:]
+
+
+def set_coord(uid,node,value):
+    """sets XYZ coordinates to node id"""
+    coord = (ctypes.c_double*3)()
+    coord[:] = value
+    chkErr(St7SetNodeXYZ(uid, node, coord))
 
 
 def get_beam_material(uid,propnum):
