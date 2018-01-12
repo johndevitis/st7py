@@ -27,6 +27,51 @@ unitTypes = {
     'Energy':ipENERGYU,
     }
 
+beamMaterialData = {
+    'modulus':ipBeamModulus,
+    'shear':ipBeamShear,
+    'poisson':ipBeamPoisson,
+    'density':ipBeamDensity,
+    'alpha':ipBeamAlpha,
+    'viscosity':ipBeamViscosity,
+    'damping_ratio':ipBeamDampingRatio,
+    'conductivity':ipBeamConductivity,
+    'specific_heat':ipBeamSpecificHeat
+    }
+
+plateIsoMaterialData = {
+    'modulus':ipPlateIsoModulus,
+    'poisson':ipPlateIsoPoisson,
+    'density':ipPlateIsoDensity,
+    'alpha':ipPlateIsoAlpha,
+    'viscosity':ipPlateIsoViscosity,
+    'damping_ratio':ipPlateIsoDampingRatio,
+    'conductivity':ipPlateIsoConductivity,
+    'specific_heat':ipPlateIsoSpecificHeat,
+    }
+
+plateOrthoMaterialData = {
+    'modulus1':ipPlateOrthoModulus1,
+    'modulus2':ipPlateOrthoModulus2,
+    'modulus3':ipPlateOrthoModulus3,
+    'shear12':ipPlateOrthoShear12,
+    'shear23':ipPlateOrthoShear23,
+    'shear31':ipPlateOrthoShear31,
+    'poisson12':ipPlateOrthoPoisson12,
+    'poisson23':ipPlateOrthoPoisson23,
+    'poisson31':ipPlateOrthoPoisson31,
+    'density':ipPlateOrthoDensity,
+    'alpha12':ipPlateOrthoAlpha1,
+    'alpha23':ipPlateOrthoAlpha2,
+    'alpha31':ipPlateOrthoAlpha3,
+    'viscosity':ipPlateOrthoViscosity,
+    'damping_ratio':ipPlateOrthoDampingRatio,
+    'conductivity1':ipPlateOrthoConductivity1,
+    'condictivity2':ipPlateOrthoConductivity2,
+    'specific_heat':ipPlateOrthoSpecificHeat
+    }
+
+
 
 class Model(object):
     """Strand7 Model Wrapper"""

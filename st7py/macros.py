@@ -6,73 +6,41 @@ from st7py.core import *
 
 
 def get_coord(uid, node):
+    """gets XYZ coordinate at node id"""
     coord = (ctypes.c_double*3)()
     chkErr(St7GetNodeXYZ(uid, node, coord))
     return coord[:]
 
 
-def get_coords(uid=1, nodes=(1,), disp=False):
-    """get node XYZ coordinates"""
-    coords = [] # initialize list (to append to) and st7 double input
-    coord = (ctypes.c_double*3)()
-    # loop with 1 index (instead of  typical 0)
-    # also note - need to slice the coord array to produce a copy
-    for node in nodes:
-        chkErr(St7GetNodeXYZ(uid, node, coord))
-        coords.append(coord[:])
-        if disp: print('Node: {} {], {}, {}'.format(node,coord[0],coord[1],coord[2]))
-    return coords
-
-
-def get_beam_material_property(uid,propnum):
-    """
-    gets beam material property data as array of doubles
-    """
+def get_beam_material(uid,propnum):
+    """gets beam material property data and returns as array of doubles"""
     data = (ctypes.c_double*9)()
     chkErr(St7GetBeamMaterialData(uid,propnum,data))
     return data
 
 
-def set_beam_material_property(uid, propnums, value, propname='ipBeamModulus', disp=False):
-    """
-    sets a single modulus to single or multiple st7 property numbers.
-    defaults to setting beam elastic modulus, ipBeamModulus
-    """
-    for prop in propnums:
-        Double = ctypes.c_double*9
-        Doubles = Double()
-        chkErr(St7GetBeamMaterialData(uid,prop,Doubles))
-        Doubles[propname] = value
-        chkErr(St7SetBeamMaterialData(uid,prop,Doubles))
-    [print('Beam Propnum: {}\tAssigned {} as {}'.format(x,propname,value)) for x in propnums if disp==True]
+def set_beam_material(uid, propnum, value, propname='modulus'):
+    """sets a beam material data for propnum. defaults to elastic modulus"""
+    data = (ctypes.c_double*9)()
+    chkErr(St7GetBeamMaterialData(uid,propnum,data))
+    data[beamMaterialData[propname]] = value
+    chkErr(St7SetBeamMaterialData(uid,propnum,data))
 
 
-def set_plate_iso_material_property(uid, props, value, propname='ipPlateIsoModulus',disp=False):
-    """
-    sets desired material data to isotropic plates.
-    defaults to ipPlateIsoModulus assignment
-    """
-    for prop in props:
-        Double = ctypes.c_double*8
-        Doubles = Double()
-        chkErr(St7GetPlateIsotropicMaterial(uid,prop,Doubles))
-        Doubles[propname] = value
-        chkErr(St7SetPlateIsotropicMaterial(uid,prop,Doubles))
-    [print('Plate Propnum: {}\tAssigned {} as {}'.format(x, propname, value)) for x in propnums if disp==True]
+def set_plate_material_iso(uid, propnum, value, propname='modulus'):
+    """sets desired material data to isotropic plate. defaults to modulus"""
+    data = (ctypes.c_double*8)()
+    chkErr(St7GetPlateIsotropicMaterial(uid, propnum, data))
+    data[plateIsoMaterialData[propname]] = value
+    chkErr(St7SetPlateIsotropicMaterial(uid, propnum, data))
 
 
-def set_plate_ortho_material_property_e(uid, propnums, value, disp=False):
-    """
-    sets a value[0] and value[1] to ortho plate modulus 1 and 2 respectively for
-    each prop in propnums
-    """
-    for prop in propnums:
-        Double = ctypes.c_double*18
-        Doubles = Double()
-        chkErr(St7GetPlateOrthotropicMaterial(uid,prop,Doubles))
-        Doubles[ipPlateOrthoModulus1] = value[0]
-        Doubles[ipPlateOrthoModulus2] = value[1]
-        chkErr(St7SetPlateOrthotropicMaterial(uid,prop,Doubles))
+def set_plate_material_ortho(uid, propnum, value, propname='modulus1'):
+    """sets desired material data to orthotropic plate. defaults to modulus1"""
+    data = (ctypes.c_double*18)()
+    chkErr(St7GetPlateOrthotropicMaterial(uid, propnum, data))
+    data[plateOrthoMaterialData[propname]] = value
+    chkErr(St7SetPlateOrthotropicMaterial(uid, propnum, data))
 
 
 def get_node_stiffness(uid=1,node=1,fcase=1):
@@ -93,7 +61,7 @@ def set_node_stiffness(uid=1,node=1,fcase=1,value=[0,0,0,0,0,0],disp=False):
     St7GetNodeKTranslation3F(uid, node, fcase, ucs, kt)
     St7GetNodeKRotation3F(uid, node, fcase, ucs, kr)
     if disp: print('Model-ID {} : Node {} : Original Stiffness {}'.format(uid,node,np.hstack((kt,kr))))
-    k = get_node_stiffness(uid,node,fcase)
+    #k = get_node_stiffness(uid,node,fcase)
     kt[:] = value[:3]
     kr[:] = value[3:]
     chkErr(St7SetNodeKTranslation3F(uid, node, fcase, ucs, kt))
