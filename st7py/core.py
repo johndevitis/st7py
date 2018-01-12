@@ -1,8 +1,7 @@
 """
-core
-===
 core api functionality
-created by John DeVitis, 11/05/2016
+===
+created by John DeVitis, 2016
 """
 
 from St7API import *
@@ -67,7 +66,7 @@ class Model(object):
     def destroyWindow(self):
         chkErr(St7DestroyModelWindow(self.uid))
 
-    def totals(self, disp=True):
+    def totals(self, disp=False):
         """get total bricks, nodes, beams, and plates. returns dictionary"""
         nEnt = ctypes.c_int()
         tots = {}
@@ -113,7 +112,7 @@ class NFA(object):
         else:
             print('NFA result file not open.')
 
-    def run(self,disp=True):
+    def run(self,disp=False):
         """run natural frequency solver. assumes model file is open. returns the generated nfa result file and nfa result log file"""
         # set up solver defaults
         chkErr(St7SetSolverFreedomCase(self.uid,self.fcase))
@@ -132,7 +131,7 @@ class NFA(object):
             chkErr(St7EnableNFANonStructuralMassCase(self.uid, m))
         # run solver
         chkErr(St7RunSolver(self.uid, stNaturalFrequencySolver, smBackgroundRun, btTrue))
-        if disp: print('NFA solver completed successfully (uid: {})'.format(self.uid))
+        if disp: print('NFA run finished (uid: {})'.format(self.uid))
         self.isrun = True
 
     def getResults(self):
@@ -181,22 +180,7 @@ class NFA(object):
 
 class Node(object):
     """Strand7 Node Class"""
-
-    def get_coords(self, uid=1, nodes=(1,), disp=True):
-        """get nodal coordinates in model"""
-
-        # initialize list (to append to) and st7 double input
-        coords = []
-        coord = (ctypes.c_double*3)()
-
-        # loop with 1 index (instead of  typical 0)
-        # also note - need to slice the coord array to produce a copy
-        for node in nodes:
-            chkErr(St7GetNodeXYZ(uid, node, coord))
-            coords.append(coord[:])
-            if disp:  # print output if desired
-                print('Node: {id} {x}, {y}, {z}'.format(id=node, x=coord[0],  y=coord[1], z=coord[2]))
-        return coords
+    pass
 
 
 

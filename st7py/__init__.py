@@ -10,3 +10,4 @@ November, 2016
 
 
 from st7py.core import *
+from . import macros
