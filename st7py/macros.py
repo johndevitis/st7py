@@ -8,7 +8,7 @@ from st7py.core import *
 def get_coord(uid, node):
     """gets XYZ coordinates at node id"""
     coord = (ctypes.c_double*3)()
-    chkErr(St7GetNodeXYZ(uid, node, coord))
+    chkErr(St7GetNodeXYZ(uid, int(node), coord))
     return coord[:]
 
 
