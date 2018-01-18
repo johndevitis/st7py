@@ -122,6 +122,9 @@ class Model(object):
             if disp: print('\t\t{}: {}'.format(k, tots[k]))
         return tots
 
+    def saveas(self, fname):
+        chkErr(St7SaveFileTo(self.uid, fname.encode()))
+
 
 class NFA(object):
     """NFA Solver Wrapper"""
@@ -202,8 +205,8 @@ class NFA(object):
         for mode in np.arange(self.nmodes):
             node_count = 0
             for node in nodes:
-                chkErr(St7GetNodeResult(self.uid,rtNodeDisp,node,mode+1,nd))
-                U[node_count,:,mode] = nd
+                chkErr(St7GetNodeResult(self.uid,rtNodeDisp,int(node),mode+1,nd))
+                U[node_count,:,mode] = nd[:]
                 node_count += 1
         self.close()
         return U
